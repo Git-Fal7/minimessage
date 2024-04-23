@@ -5,6 +5,7 @@
 //
 // Credits to the partial Go port of MiniMessage (https://docs.advntr.dev/minimessage/index.html) by
 // https://github.com/emortalmc/GateProxy/blob/main/minimessage/minimessage.go.
+// Also creds to https://github.com/minekube/gate-plugin-template/blob/main/util/mini/mini.go
 package minimessage
 
 import (
@@ -77,8 +78,28 @@ func modify(key string, content string, style *c.Style) *c.Text {
 		newText.Content = content
 		newText.S = *style
 
-	case key == "bold": // <bold>
+	case key == "bold" || key == "b": // <bold>
 		style.Bold = c.True
+		newText.Content = content
+		newText.S = *style
+
+	case key == "italic" || key == "em" || key == "i": // <italic>
+		style.Italic = c.True
+		newText.Content = content
+		newText.S = *style
+
+	case key == "underlined" || key == "u": // <underlined>
+		style.Underlined = c.True
+		newText.Content = content
+		newText.S = *style
+
+	case key == "strikethrough" || key == "st": // <strikethrough>
+		style.Strikethrough = c.True
+		newText.Content = content
+		newText.S = *style
+
+	case key == "obfuscated" || key == "obf": // <obfuscated>
+		style.Obfuscated = c.True
 		newText.Content = content
 		newText.S = *style
 
