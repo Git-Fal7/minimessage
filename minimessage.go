@@ -112,6 +112,13 @@ func modify(key string, content string, style *c.Style) *c.Text {
 		newText.Content = "\n" + content
 		newText.S = *style
 
+	case strings.HasPrefix(key, "insertion"): // <insert:test>
+		insertionKeys := strings.Split(key, ":")
+		insertionValue := &insertionKeys[1]
+		style.Insertion = insertionValue
+		newText.Content = content
+		newText.S = *style
+
 	case strings.HasPrefix(key, "click"): // <click:run_command:/seed>
 		clickKey := strings.Split(key, ":")
 		clickAction := clickKey[1]
