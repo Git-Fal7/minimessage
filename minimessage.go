@@ -71,6 +71,7 @@ func modify(key string, content string, style *c.Style) *c.Text {
 		style.Color = parsed
 		newText.Content = content
 		newText.S = *style
+
 	case strings.HasPrefix(key, "color"): // <color:light_purple>
 		colorName := strings.Split(key, ":")[1]
 		parsed, err := parseColor(colorName)
@@ -105,6 +106,10 @@ func modify(key string, content string, style *c.Style) *c.Text {
 	case key == "obfuscated" || key == "obf": // <obfuscated>
 		style.Obfuscated = c.True
 		newText.Content = content
+		newText.S = *style
+
+	case key == "newline": // <newline>
+		newText.Content = "\n" + content
 		newText.S = *style
 
 	case strings.HasPrefix(key, "click"): // <click:run_command:/seed>
