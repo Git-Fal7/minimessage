@@ -200,6 +200,9 @@ func modify(key string, content string, style *c.Style) *c.Text {
 		}
 
 		newText = gradient(content, *style, colors...)
+
+	case key == "reset":
+		newText.Content = content
 	}
 
 	return newText
