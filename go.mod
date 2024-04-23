@@ -1,4 +1,4 @@
-module minimessage
+module github.com/git-fal7/minimessage
 
 go 1.22.0
 
