@@ -11,10 +11,14 @@ package minimessage
 import (
 	"fmt"
 	"math"
+	"strconv"
 	"strings"
 
+	"github.com/google/uuid"
 	"go.minekube.com/common/minecraft/color"
 	c "go.minekube.com/common/minecraft/component"
+	keyCommon "go.minekube.com/common/minecraft/key"
+	"go.minekube.com/common/minecraft/nbt"
 )
 
 // Parse takes a string as input and returns a `c.Text` object. It splits the input string by "<",
@@ -120,6 +124,50 @@ func modify(key string, content string, style *c.Style) *c.Text {
 			style.ClickEvent = c.RunCommand(clickValue)
 		case "suggest_command":
 			style.ClickEvent = c.SuggestCommand(clickValue)
+		}
+		newText.Content = content
+		newText.S = *style
+
+	case strings.HasPrefix(key, "hover"): // <hover:show_text:test>
+		hoverKey := strings.Split(key, ":")
+		hoverAction := hoverKey[1]
+		hoverValue := hoverKey[2]
+		switch hoverAction {
+		case "show_text":
+			// TODO: parse using Parse()
+			style.HoverEvent = c.ShowText(&c.Text{
+				Content: hoverValue,
+			}) // _text_
+		case "show_item":
+			showItemKeys := strings.Split(hoverValue, ":")
+			itemType, _ := keyCommon.Parse(showItemKeys[0])
+			itemCount := 0 // not sure whats the default,
+			itemTag := nbt.NewBinaryTagHolder("")
+			if len(showItemKeys) >= 2 {
+				count, _ := strconv.Atoi(showItemKeys[1])
+				itemCount = count
+				if len(showItemKeys) == 3 {
+					itemTag = nbt.NewBinaryTagHolder(showItemKeys[2])
+				}
+			}
+			style.HoverEvent = c.ShowItem(&c.ShowItemHoverType{
+				Item:  itemType,
+				Count: itemCount,
+				NBT:   itemTag,
+			}) // _type_[:_count_[:tag]]
+		case "show_entity":
+			showEntityKeys := strings.Split(hoverValue, ":")
+			entityType, _ := keyCommon.Parse(showEntityKeys[0])
+			entityId, _ := uuid.Parse(showEntityKeys[1])
+			entityName := &c.Text{}
+			if len(showEntityKeys) == 3 {
+				entityName = Parse(showEntityKeys[2])
+			}
+			style.HoverEvent = c.ShowEntity(&c.ShowEntityHoverType{
+				Type: entityType,
+				Id:   entityId,
+				Name: entityName,
+			}) // _type_:_uuid_[:_name_]
 		}
 		newText.Content = content
 		newText.S = *style
