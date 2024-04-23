@@ -103,6 +103,27 @@ func modify(key string, content string, style *c.Style) *c.Text {
 		newText.Content = content
 		newText.S = *style
 
+	case strings.HasPrefix(key, "click"): // <click:run_command:/seed>
+		clickKey := strings.Split(key, ":")
+		clickAction := clickKey[1]
+		clickValue := clickKey[2]
+		switch clickAction {
+		case "change_page":
+			style.ClickEvent = c.ChangePage(clickValue)
+		case "copy_to_clipboard":
+			style.ClickEvent = c.CopyToClipboard(clickValue)
+		case "open_file":
+			style.ClickEvent = c.OpenFile(clickValue)
+		case "open_url":
+			style.ClickEvent = c.OpenUrl(clickValue)
+		case "run_command":
+			style.ClickEvent = c.RunCommand(clickValue)
+		case "suggest_command":
+			style.ClickEvent = c.SuggestCommand(clickValue)
+		}
+		newText.Content = content
+		newText.S = *style
+
 	case strings.HasPrefix(key, "gradient"): // <gradient:light_purple:gold>
 		colorKey := strings.Split(key, ":")
 		colorNames := colorKey[1:]
