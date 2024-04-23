@@ -112,7 +112,7 @@ func modify(key string, content string, style *c.Style) *c.Text {
 		newText.Content = "\n" + content
 		newText.S = *style
 
-	case strings.HasPrefix(key, "insertion"): // <insert:test>
+	case strings.HasPrefix(key, "insertion") || strings.HasPrefix(key, "insert"): // <insertion:test>
 		insertionKeys := strings.Split(key, ":")
 		insertionValue := &insertionKeys[1]
 		style.Insertion = insertionValue
