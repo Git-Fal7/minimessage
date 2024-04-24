@@ -41,8 +41,12 @@ func Parse(mini string) *c.Text {
 		if strings.HasPrefix(key, "/") {
 			styles = styles[:len(styles)-1]
 		} else {
-			newStyle := styles[len(styles)-1]
-
+			var newStyle c.Style
+			if key == "reset" {
+				newStyle = c.Style{Color: color.White}
+			} else {
+				newStyle = styles[len(styles)-1]
+			}
 			styles = append(styles, newStyle)
 		}
 
@@ -62,6 +66,8 @@ func modify(key string, content string, style *c.Style) *c.Text {
 	newText := &c.Text{}
 
 	switch {
+	case strings.HasPrefix(key, "/"):
+		break
 	case strings.HasPrefix(key, "#"): // <#ff00ff>
 		parsed, err := parseColor(key)
 		if err != nil {
@@ -201,8 +207,19 @@ func modify(key string, content string, style *c.Style) *c.Text {
 
 		newText = gradient(content, *style, colors...)
 
-	case key == "reset":
+	case key == "reset": // <reset>
 		newText.Content = content
+
+	default: // <light_purple>
+		colorName := key
+		parsed, err := parseColor(colorName)
+		if err != nil {
+			fmt.Println(err)
+			return nil
+		}
+		style.Color = parsed
+		newText.Content = content
+		newText.S = *style
 	}
 
 	return newText
