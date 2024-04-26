@@ -72,7 +72,8 @@ func modify(key string, content string, style *c.Style) *c.Text {
 		parsed, err := parseColor(key)
 		if err != nil {
 			fmt.Println(err)
-			return nil
+			newText.Content = fmt.Sprintf("<%s>%s", key, content)
+			break
 		}
 		style.Color = parsed
 		newText.Content = content
@@ -83,7 +84,8 @@ func modify(key string, content string, style *c.Style) *c.Text {
 		parsed, err := parseColor(colorName)
 		if err != nil {
 			fmt.Println(err)
-			return nil
+			newText.Content = fmt.Sprintf("<%s>%s", key, content)
+			break
 		}
 		style.Color = parsed
 		newText.Content = content
@@ -199,7 +201,8 @@ func modify(key string, content string, style *c.Style) *c.Text {
 			parsedColor, err := parseColor(col)
 			if err != nil {
 				fmt.Println(err)
-				return nil
+				newText.Content = fmt.Sprintf("<%s>%s", key, content)
+				break
 			}
 			newColor, _ := color.Make(parsedColor)
 			colors[i] = *newColor
@@ -215,7 +218,8 @@ func modify(key string, content string, style *c.Style) *c.Text {
 		parsed, err := parseColor(colorName)
 		if err != nil {
 			fmt.Println(err)
-			return nil
+			newText.Content = fmt.Sprintf("<%s>%s", key, content)
+			break
 		}
 		style.Color = parsed
 		newText.Content = content
